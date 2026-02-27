@@ -1,0 +1,33 @@
+name: Build Blog from C Source
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Compile Generator
+        run: gcc -O3 src/sitegen.c -o sitegen
+
+      - name: Run Generator
+        run: mkdir ./dist; ./sitegen ./pages ./dist ./pages/style.css
+
+      - name: Upload Finished Site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

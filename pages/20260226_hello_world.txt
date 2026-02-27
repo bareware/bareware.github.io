@@ -1,0 +1,38 @@
+2026-02-26 | Hello, World!
+
+  I've had this idea for a while. No, I'm not talking about the blog. I'm talking about simple engineering. You know - building things. No libraries, no frameworks, ignore best practices (at least at first) and just go with the process.
+
+  My last experience working on the web was before it exploded into countless services and frameworks. Back then, it was simple. Open Notepad and start typing. Ship some HTML. Refresh the browser. Done.
+
+  Nowadays things feel different. You need a SSG - static site generator. But first you need to install the SSG. To install it you need a package manager. The package manager probably doesn't come with your OS - it comes with a programming language. That language has its own dependencies. Those dependencies are installed by another package manager. You see where this is going.
+
+  This blog - bareware - exists to resist that gravity.
+
+  If the goal is to build things and build them no more complex than they need to be, then what better place to start than the blog itself? I could open my editor and start typing raw HTML. And honestly, that would be fine. But I do appreciate the simplicity of Markdown - the idea that text should be human-readable first and machine-parsable second.
+
+  Unfortunately, parsing full Markdown is not simple. Edge cases pile up. Specifications grow. Implementations sprawl. That doesn't mean we can't borrow the good ideas.
+
+  The core idea is this: make the text foremost human-readable, use very little markup, and make it trivially parsable.
+
+  One way to do that is to prefix every line with a single character describing its role. For example:
+
+- ' ' for paragraph
+- '#' for heading
+- '-' for list item
+- '!' for link
+- '@' for image
+- '`' for code
+
+  That's it. No ambiguity. No cleverness. Just a stream of lines where the first byte tells you everything you need to know.
+
+  Using a format like this makes parsing simple and fast. No regex. No AST. No high-level language required. We can write the parser in C in a day, generate static HTML, and move on to the next challenge.
+
+  And this is exactly what I did for this post. Read the whole file into memory. Look at the first character. Wrap the rest of the line in the appropriate tag. Embed an external CSS file. Done.
+
+  I'm not going to walk through the code line by line. This isn't going to be that type of blog.
+
+! https://github.com/bareware/bareware.github.io/tree/main/src | You can find the code in GitHub
+
+  The next few posts may require adding small features, but this is going to be the theme: don't future-proof. Implement what you need now. When requirements change - and are known - implement the necessary changes.
+
+  With static site generation behind us, we can move on to more interesting problems.
