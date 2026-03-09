@@ -1,0 +1,43 @@
+2026-03-08 | Bare MCU
+
+  There are plenty of bare-metal tutorials for various MCUs. The idea of bare metal is to program the MCU without any abstraction, all the way down to writing magic numbers into magic addresses. I really enjoy peeling back abstraction layers. The downside is that anything more complex than a blinking LED quickly results in code that looks like it has been decompiled and translated back into C. Another problem with the bare-metal layer is portability. If you change from one MCU to another, you often need to rewrite almost everything — even when staying within the same manufacturer. Registers live at different addresses and flags have different values.
+
+  There is another, much more commonly used layer — HAL. This layer improves readability and portability, but typical implementations come with a cost. They trade compatibility for some bloat. A single function may add only a few extra instructions or push a couple of additional values onto the stack, but when targeting an MCU with limited Flash and RAM, every byte counts.
+
+  Today I decided to start a small Bare MCU module. The module will be written in the style of a single-header library — more specifically, a single header per MCU. The MCU I'm starting with is the STM32G0x0 by STMicroelectronics.
+
+  The most important document when writing such a low-level library is the reference manual for the MCU. For STM32G0x0 this is:
+
+! https://www.st.com/resource/en/reference_manual/rm0454-stm32g0x0-advanced-armbased-32bit-mcus-stmicroelectronics.pdf | RM0454 - Reference Manual.
+
+  Reference manuals complement the datasheet. While the datasheet is primarily a guide for the hardware engineer, the reference manual is the guide for the firmware developer. From this reference manual we can find the addresses of registers and all the bits that need to be set to configure the microcontroller.
+
+  Instead of using macros, I've opted for a more type-safe approach while trying not to introduce any overhead. This also allows registers to be grouped in a structured way:
+
+`typedef struct {
+`    volatile uint32_t moder;     // (GPIOx_MODER)   GPIO port mode register
+`    volatile uint32_t otyper;    // (GPIOx_OTYPER)  GPIO port output type register
+`    volatile uint32_t ospeedr;   // (GPIOx_OSPEEDR) GPIO port output speed register
+`    volatile uint32_t pupdr;     // (GPIOx_PUPDR)   GPIO port pull-up/pull-down register
+`    volatile uint32_t idr;       // (GPIOx_IDR)     GPIO port input data register
+`    volatile uint32_t odr;       // (GPIOx_ODR)     GPIO port output data register
+`    volatile uint32_t bsrr;      // (GPIOx_BSRR)    GPIO port bit set/reset register
+`    volatile uint32_t lckr;      // (GPIOx_LCKR)    GPIO port configuration lock register
+`    volatile uint32_t afrl;      // (GPIOx_AFRL)    GPIO alternate function low register
+`    volatile uint32_t afrh;      // (GPIOx_AFRH)    GPIO alternate function high register
+`    volatile uint32_t brr;       // (GPIOx_BRR)     GPIO bit reset register
+`} gpio_t;
+
+  The registers can be used directly for explicit control, but the API also provides a HAL-like interface. Here is what this API looks like:
+
+`// Configure PB0 and PB4 for output
+`gpio_setup_output(gpio_b, gpio_output_push_pull, gpio_speed_low, gpio_pin_0 | gpio_pin_4);
+`
+`// Set PB0 high
+`gpio_set(gpio_b, gpio_pin_0);
+
+  One specific thing I was careful about was adding the ability to configure and access multiple GPIO pins at once. A common approach is to do this in a loop, but since the registers are marked as volatile, every read and write must be performed and cannot be optimized away or collapsed into a single write. Because of this, it is still important to inspect the generated assembly and make sure the abstraction really is zero-cost.
+
+  This is a work in progress and I will keep adding features as needed, but that will have to wait for another day.
+
+! https://github.com/bareware/mod-mcu | Module in GitHub
