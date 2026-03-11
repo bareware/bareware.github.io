@@ -1,0 +1,17 @@
+2026-03-10 | STM32G030Fx Development Board
+
+  The new low-level library I started a couple of days ago will need a project, and I already have a plan for one. I'll design both the hardware and the firmware for it, but it will take a bit of time. In the meantime I figured the best way to build an MCU module is to test it on a development board that I build myself.
+
+  Time to start KiCad... A quick schematic, nothing special. A couple of LEDs, reset and user switches, an SWD programming interface, and all the remaining IO on the chip exposed as headers. This is going to be a recurring theme — don't make it more complex than it needs to be.
+
+@ images/20260310/schematic.jpg | Board Schematic
+
+  I'm relatively new to designing hardware, but I have to admit it is a lot more rewarding than working purely on software. It's hard to explain, but holding a board in my hands that I've designed feels surreal. It's also much easier to show a gadget to a friend than to explain what new library I wrote and how cool the interface is.
+
+  I usually solder the boards myself, but this time I opted for assembly. It will take a few days for the boards to arrive. In the meantime, here is a rendering.
+
+@ images/20260310/render.jpg | Board Rendering
+
+  As usual, the KiCad project — including gerbers, BOM, and placement files compatible with JLCPCB — is available on GitHub.
+
+! https://github.com/bareware/pcb-STM32G030Fx | STM32G030Fx Development Board on GitHub
