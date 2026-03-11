@@ -143,6 +143,16 @@ int compile(const char* in_file, const char* out_file, string_t css) {
                 fprintf(out, "</a></p>");
                 break;
             }
+            case '@': {
+                string_t link = advance_block(&src, '|', true);
+                string_t label = advance_block(&src, '\n', true);
+                fprintf(out, "<img src=\"");
+                render_block(out, link);
+                fprintf(out, "\" alt=\"");
+                render_block(out, label);
+                fprintf(out, "\">");
+                break;
+            }
             case '-': {
                 fprintf(out, "<ul>");
                 while (c == '-') {

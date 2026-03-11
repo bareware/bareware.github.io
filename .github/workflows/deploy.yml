@@ -18,11 +18,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Create Dist Directory
+        run: mkdir ./dist
+
       - name: Compile Generator
         run: gcc -O3 src/sitegen.c -o sitegen
 
       - name: Run Generator
-        run: mkdir ./dist; ./sitegen ./pages ./dist ./pages/style.css
+        run: ./sitegen ./pages ./dist ./pages/style.css
+
+      - name: Copy Images
+        run: cp -r ./pages/images ./dist
 
       - name: Upload Finished Site
         uses: actions/upload-pages-artifact@v3

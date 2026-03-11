@@ -32,6 +32,13 @@ a:hover {
     opacity: 0.8;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px 0;
+}
+
 .subt {
     font-family: monospace;
     font-size: 0.8rem;
