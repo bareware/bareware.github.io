@@ -1,0 +1,28 @@
+2026-03-11 | STM32G030Fx Clean Start
+
+  I needed a clean project for STM32G030Fx. As bare as it gets — startup.c, main.c, linker.ld, Makefile. I basically wrote a blinky, the hello world of embedded systems, used to verify that the microcontroller works and that we know how to flash it.
+
+  I opted for the startup code to be written in C to make it more readable. Its purpose is to perform some setup before main is called. In startup.c we have an ISR vector table starting with the address of the stack, followed by the interrupt handlers, and a reset_handler method which is our entry point. The reset_handler copies the '.data' section to RAM followed by zero-initializing the '.bss' section. One important thing to be careful about when writing reset_handler in C is ensuring the compiler doesn't use the stack or global variables, as they are not set up yet. Once this is done we can call 'main()'.
+
+  The 'main()' function contains a minimal blinky implementation. Enable GPIO, configure GPIO for output, set, wait, reset, wait, repeat. The one interesting thing here is that I decided against using the SysTick interrupt for handling delays. This approach has its tradeoffs. The positives are that it is simple to implement, requires very little code, and is mostly very accurate. The negatives are that other interrupts can cause time drift and the microcontroller cannot be put into a low-power mode.
+
+`void delay_clk3(uint32_t num) {
+`    __asm volatile (
+`        ".syntax unified \n" 
+`        "1: subs %[num], #1 \n"
+`        "   bne 1b \n"
+`        : [num] "+r" (num)
+`    );
+`}
+`
+`// 16MHz / 1000 / 3 cycles per iteration
+`#define delay_ms(x) delay_clk3((x) * 5333)
+
+  The way it works is by using a loop with two instructions — SUB (1 cycle) and BNE (2 cycles). This results in a very predictable 3-cycle loop. Since the STM32G030Fx runs at a 16 MHz clock after reset, to get milliseconds all we need to do is scale the 3 cycles by 5333 to get roughly 16000 cycles (1/1000 sec).
+
+  The linker.ld script tells the toolchain exactly how much RAM and Flash we have and where they start. It also organizes the sections and calculates the addresses for them.
+
+  I'm quite happy with the setup. I may end up extracting it into a template, as I'm going to keep building on top of this repository.
+
+! https://github.com/bareware/prj-epsilon/tree/main/firmware | Project on GitHub
+
