@@ -1,0 +1,22 @@
+2026-03-13 | Big Number
+
+  Large numbers that don't fit in registers, or even in larger types like uint64_t, are typically called Big Numbers. Libraries that deal with such numbers are called arbitrary precision arithmetic libraries. Today's project is one such library, or as I prefer to call them, modules.
+
+  As usual it is written in C and should be platform agnostic, but I'm planning to optimize it specifically for ARM Cortex-M0+.
+
+  How can we do arithmetic with types that are larger than a register? We do it exactly the same way a kid learning multi-digit arithmetic would.
+
+  One possible approach would be to store the number as an array of characters '0' to '9'. This is not the best choice for storage because only 4 out of 8 bits per byte would be used while the rest would be wasted. Arithmetic in base 10 would also require modulo or division by 10. And we would need many operations to add two 10-digit numbers even though they could easily fit into a register.
+
+  The trick is to pick the correct base for the numeric system. In our case this will be 2^32. Instead of digits we will call these units words. A word can represent any number between 0 and 4,294,967,295. A big number type "bn_value_t" will simply be an array of words. For simplicity it will be a fixed-size array, which means our module is not truly arbitrary precision but rather high precision.
+
+  So how does addition work? We add the least significant words of the addends and obtain the least significant word of the sum. Then we move to the next words and so on, propagating the carry from word to word. It's as simple as that.
+
+  Multiplication also follows the standard "schoolbook" multiplication. We calculate partial products by multiplying one word at a time from one multiplicand with the other multiplicand, and then accumulate the result by summing all partial products.
+
+  We also need to take special care with type sizes. For example, when adding two numbers we also return a carry word in case the big number type isn't large enough to hold the full result. When multiplying two numbers we return a double-sized big number (bn_dvalue_t).
+
+  Initially I implemented "schoolbook" division as well, but since ARM Cortex-M0+ doesn't support division with remainder, I implemented it bitwise — one bit at a time. Because our numbers can be quite large, this approach isn't really acceptable. After a quick research I found that the correct way to implement this is using Knuth’s Algorithm D. But that will be for another day.
+
+! https://github.com/bareware/mod-bn | As usual, code available on GitHub
+
