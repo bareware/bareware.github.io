@@ -1,0 +1,8 @@
+2026-03-14 | Big Number Update
+
+  After some back and forth I decided to keep "bn_div" bitwise. Knuth's Algorithm D is the gold standard for implementing big number division, but it also requires division of a double word by a word, while Cortex-M0+ doesn't have native support for any type of division. Adding that support would probably make the two algorithms comparable in speed, but it would also add complexity.
+
+  To simplify things further I completely removed "bn_dvalue_t" and changed "bn_mul" to return a bit indicating overflow.
+
+! https://github.com/bareware/mod-bn/tree/8595fed9ada0484363824e9434295e02376c73c7 | As usual, code available on GitHub
+
