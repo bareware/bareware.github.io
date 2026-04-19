@@ -2,7 +2,7 @@
 
   The new low-level library I started a couple of days ago will need a project, and I already have a plan for one. I'll design both the hardware and the firmware for it, but it will take a bit of time. In the meantime I figured the best way to build an MCU module is to test it on a development board that I build myself.
 
-  Time to start KiCad... A quick schematic, nothing special. A couple of LEDs, reset and user switches, an SWD programming interface, and all the remaining IO on the chip exposed as headers. This is going to be a recurring theme — don't make it more complex than it needs to be.
+  Time to start KiCad... A quick schematic, nothing special. A couple of LEDs, reset and user switches, an SWD programming interface, and all the remaining IO on the chip exposed as headers. This is going to be a recurring theme - don't make it more complex than it needs to be.
 
 @ images/20260310/schematic.jpg | Board Schematic
 
@@ -12,6 +12,6 @@
 
 @ images/20260310/render.jpg | Board Rendering
 
-  As usual, the KiCad project — including gerbers, BOM, and placement files compatible with JLCPCB — is available on GitHub.
+  As usual, the KiCad project - including gerbers, BOM, and placement files compatible with JLCPCB - is available on GitHub.
 
 ! https://github.com/bareware/pcb-STM32G030Fx | STM32G030Fx Development Board on GitHub

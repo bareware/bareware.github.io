@@ -1,10 +1,10 @@
 2026-03-08 | Bare MCU
 
-  There are plenty of bare-metal tutorials for various MCUs. The idea of bare metal is to program the MCU without any abstraction, all the way down to writing magic numbers into magic addresses. I really enjoy peeling back abstraction layers. The downside is that anything more complex than a blinking LED quickly results in code that looks like it has been decompiled and translated back into C. Another problem with the bare-metal layer is portability. If you change from one MCU to another, you often need to rewrite almost everything — even when staying within the same manufacturer. Registers live at different addresses and flags have different values.
+  There are plenty of bare-metal tutorials for various MCUs. The idea of bare metal is to program the MCU without any abstraction, all the way down to writing magic numbers into magic addresses. I really enjoy peeling back abstraction layers. The downside is that anything more complex than a blinking LED quickly results in code that looks like it has been decompiled and translated back into C. Another problem with the bare-metal layer is portability. If you change from one MCU to another, you often need to rewrite almost everything - even when staying within the same manufacturer. Registers live at different addresses and flags have different values.
 
-  There is another, much more commonly used layer — HAL. This layer improves readability and portability, but typical implementations come with a cost. They trade compatibility for some bloat. A single function may add only a few extra instructions or push a couple of additional values onto the stack, but when targeting an MCU with limited Flash and RAM, every byte counts.
+  There is another, much more commonly used layer - HAL. This layer improves readability and portability, but typical implementations come with a cost. They trade compatibility for some bloat. A single function may add only a few extra instructions or push a couple of additional values onto the stack, but when targeting an MCU with limited Flash and RAM, every byte counts.
 
-  Today I decided to start a small Bare MCU module. The module will be written in the style of a single-header library — more specifically, a single header per MCU. The MCU I'm starting with is the STM32G0x0 by STMicroelectronics.
+  Today I decided to start a small Bare MCU module. The module will be written in the style of a single-header library - more specifically, a single header per MCU. The MCU I'm starting with is the STM32G0x0 by STMicroelectronics.
 
   The most important document when writing such a low-level library is the reference manual for the MCU. For STM32G0x0 this is:
 

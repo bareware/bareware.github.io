@@ -16,7 +16,7 @@
 
   We also need to take special care with type sizes. For example, when adding two numbers we also return a carry word in case the big number type isn't large enough to hold the full result. When multiplying two numbers we return a double-sized big number (bn_dvalue_t).
 
-  Initially I implemented "schoolbook" division as well, but since ARM Cortex-M0+ doesn't support division with remainder, I implemented it bitwise — one bit at a time. Because our numbers can be quite large, this approach isn't really acceptable. After a quick research I found that the correct way to implement this is using Knuth’s Algorithm D. But that will be for another day.
+  Initially I implemented "schoolbook" division as well, but since ARM Cortex-M0+ doesn't support division with remainder, I implemented it bitwise - one bit at a time. Because our numbers can be quite large, this approach isn't really acceptable. After a quick research I found that the correct way to implement this is using Knuth's Algorithm D. But that will be for another day.
 
 ! https://github.com/bareware/mod-bn/tree/c092f128ee5207383dd2ad513c419eae6f3c250a | As usual, code available on GitHub
 
