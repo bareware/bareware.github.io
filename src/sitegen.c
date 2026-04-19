@@ -104,6 +104,7 @@ int compile(const char* in_file, const char* out_file, string_t css) {
     fprintf(out, "<style>");
     render_block(out, css);
     fprintf(out, "</style>");
+    fprintf(out, "<link rel=\"icon\" type=\"image/png\" href=\"/images/favicon.png\">");
     fprintf(out, "</head><body>");
     // title and date
     fprintf(out, "<h1>");
@@ -244,6 +245,7 @@ int main(int argc, char* argv[]) {
         fprintf(out, "<style>");
         render_block(out, css);
         fprintf(out, "</style>");
+        fprintf(out, "<link rel=\"icon\" type=\"image/png\" href=\"/images/favicon.png\">");
         fprintf(out, "</head><body>");
         fprintf(out, "<h1>bareware.dev</h1>");
         fprintf(out, "<p class=\"subt\">Engineering without abstraction layers between you and the machine!</p>");
