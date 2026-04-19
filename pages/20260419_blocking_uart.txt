@@ -1,0 +1,35 @@
+2026-04-19 | Blocking UART
+
+  Today I added simple blocking UART support to the STM32G0x0 Bare MCU module. While I really want to move toward a non-blocking driver, this first step is useful for bring-up and validation.
+
+  But first, what is UART (Universal Asynchronous Receiver/Transmitter)? UART is a hardware communication protocol that enables serial data exchange between devices without requiring a shared clock signal. It uses only two pins - one for transmitting (TX) and one for receiving (RX).
+
+  UART is quite simple to configure, but there are still a few details to pay attention to. UART does not perform any handshaking or protocol negotiation, so both sides of the connection must use identical settings - baud rate, clock frequency, stop bits, parity, and data bits. Also make sure the GPIO pins used for UART are configured to the correct alternate function mode.
+
+` rcc_clk_enable(rcc_clk_gpio_a);
+` rcc_clk_enable(rcc_clk_usart_2);
+`
+` gpio_setup_alt_func(gpio_a, gpio_af_1,
+`                     gpio_pull_none, gpio_output_push_pull, gpio_speed_low,
+`                     gpio_pin_2 | gpio_pin_3);
+`
+` usart_enable(usart_2, 16000000, (usart_config_t){
+`     .baud = 115200,
+`     .databits = usart_databits_8,
+`     .parity = usart_parity_none,
+`     .stopbits = usart_stopbits_1,
+`     .mode = usart_mode_tx | usart_mode_rx,
+`     .flowcontrol = usart_flowcontrol_none,
+` });
+`
+` const char* msg = "Hello, World!\r\n";
+` for (uint32_t i=0; i<sizeof(msg)-1; i++) {
+`     usart_send(usart_2, msg[i]);
+` }
+
+  The `usart_enable` function handles most of the UART configuration. It initializes and enables the USART peripheral by setting the baud rate and communication parameters based on the provided clock and configuration structure. Internally, it computes the correct BRR (baud rate register) value using fixed-point arithmetic to achieve accurate timing from the given APB clock.
+
+  Once configured, we can use the blocking `usart_send` and `usart_recv` functions to transmit and receive data. Because this implementation is blocking, each byte transmission stalls the CPU until completion. This is acceptable for early bring-up and debugging, but will eventually be replaced with a non-blocking, interrupt-driven, DMA-based driver.
+
+! https://github.com/bareware/mod-mcu/tree/b535d6c05ff5c750c0ec4c526ac6aa7f7831884c | Code available on GitHub
+
