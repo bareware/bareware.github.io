@@ -1,0 +1,10 @@
+2026-04-20 | Bare MCU - STM32C0
+
+  Today I compared STM32G0 and STM32C0. Both microcontrollers are entry-level Cortex-M0+ devices and share many similarities. The C0 is more cost-optimized, while the G0 is faster and offers larger Flash and RAM options.
+
+  I enjoy developing with constraints. If I believe smaller Flash and RAM are sufficient for a project, I prefer not to choose a larger MCU just because it simplifies development. I can already think of future projects where STM32C0 would be a good fit, so I decided to add support for it in Bare MCU.
+
+  With the basic features that Bare MCU currently supports, there are only a few minor differences between the two. I could create a common header and use the preprocessor to handle those differences, but for now I decided against it. The main reason is to keep each microcontroller implementation small, explicit, and easy to read.
+
+! https://github.com/bareware/mod-mcu | Bare MCU on GitHub
+
